@@ -1,0 +1,18 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title 'Statystyki sprzedaży' %}
+
+{% block page_content %}
+
+    <div class="statistics" data-statistics="{{ statistics }}"></div>
+    <div style="display:flex; width: 50%">
+        <canvas id="moneyMonth" width="2" height="1"></canvas>
+        <canvas id="userMoney" width="2" height="1"></canvas>
+    </div>
+
+    {{ encore_entry_script_tags('paymentStatistic') }}
+
+{% endblock %}

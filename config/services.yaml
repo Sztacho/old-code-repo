@@ -1,0 +1,34 @@
+parameters:
+  locale: 'pl'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  MNGame\:
+    resource: '../src/*'
+    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+  MNGame\EventListener\ExceptionListener:
+    arguments: ['@logger', '@MNGame\Service\Mail\MailSenderService']
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception }
+
+  MNGame\Service\Connection\Minecraft\MojangPlayerService:
+    autowire: true
+
+  mojang.player.service:
+    class: MNGame\Service\Connection\Minecraft\MojangPlayerService
+
+  MNGame\Controller\:
+    resource: '../src/Controller'
+    tags: ['controller.service_arguments']
+
+  MNGame\Service\EnvironmentService:
+    arguments: ['%kernel.environment%']
+
+  get_set_method_normalizer:
+    class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+    tags:
+      - { name: serializer.normalizer }

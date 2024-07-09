@@ -1,0 +1,42 @@
+security:
+  role_hierarchy:
+    ROLE_SUPER_ADMIN: [ ROLE_ADMIN ]
+    ROLE_ADMIN: [ ROLE_USER, ROLE_SERVER, ROLE_MODERATOR ]
+    ROLE_SERVER: [ ROLE_USER ]
+    ROLE_MODERATOR: [ ROLE_USER ]
+
+  providers:
+    MNGame:
+      entity:
+        class: MNGame\Database\Entity\User
+        property: username
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      anonymous: ~
+      logout:
+        path: logout
+        target: login
+      form_login:
+        login_path: login
+        check_path: login
+      guard:
+        authenticators:
+          - MNGame\Security\TokenAuthenticator
+
+  encoders:
+    MNGame\Database\Entity\User: bcrypt
+
+  access_control:
+    - { path: ^/panel, roles: [ ROLE_SERVER, ROLE_MODERATOR ] }
+    - { path: ^/panel/, roles: [ ROLE_SERVER, ROLE_MODERATOR ] }
+    - { path: ^/admin, roles: [ ROLE_SERVER, ROLE_MODERATOR ] }
+    - { path: ^/admin/, roles: [ ROLE_SERVER, ROLE_MODERATOR ] }
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/user, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/user/, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/ }
